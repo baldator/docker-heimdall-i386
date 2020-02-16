@@ -4,6 +4,8 @@ FROM baldator/alpine-s6
 ARG BUILD_DATE
 ARG VERSION
 ENV HEIMDALL_RELEASE 2.2.2
+ENV PUID 1000
+ENV PGUI 1000
 LABEL maintainer="baldator"
 
 # environment settings
@@ -13,6 +15,9 @@ RUN \
  echo "**** install runtime packages ****" && \
  apk add --no-cache --upgrade \
 	curl \
+    php7 \
+    php7-json \
+    php7-session \
 	php7-ctype \
 	php7-pdo_pgsql \
 	php7-pdo_sqlite \
@@ -31,7 +36,8 @@ RUN \
 	"https://github.com/linuxserver/Heimdall/archive/${HEIMDALL_RELEASE}.tar.gz" && \
  echo "**** cleanup ****" && \
  rm -rf \
-	/tmp/*
+	/tmp/* \
+chown -R 1000:1000 /var/www/localhost/heimdall/
 
 # add local files
 COPY root/ /
